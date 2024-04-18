@@ -6,6 +6,7 @@ import tempPlaylist from "./tempPlaylist";
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { Padding } from "@mui/icons-material";
 
 
 
@@ -25,7 +26,7 @@ function App() {
   return (
     <>
       <NavBar>
-        <NumberResult music={music}/>
+        {/* <NumberResult music={music}/> */}
         </NavBar>
       <Main>
         <Box>
@@ -99,6 +100,8 @@ function Music({ music, addToPlaylist }) {
 
   return (
     <div>
+            <NumberResult music={filteredMusic} />
+
       <input
         className="search"
         type="text"

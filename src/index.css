@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   background-color:rgb(16 20 24);
-  ;
+  color: #fff;
   margin: 0;
   padding: 0;
 }
@@ -11,14 +11,16 @@ body {
   justify-content: space-around;
   margin: 10px;
   border-radius: 20px;
-  background-color: darkslategray;
+  background-color: rgb(29, 40, 40);
+  box-shadow: 1 1px 1px rgba(251, 251, 251, 0.999);
+
 }
 
 .container > div {
   flex: 1;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(16, 20, 24);
+
 }
 
 ul {
@@ -69,3 +71,12 @@ nav{
   background-color: #0056b3;
 }
 
+.search{
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.dropdown{
+  padding: 10px;
+}
