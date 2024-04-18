@@ -179,9 +179,8 @@ function PlayList({ playlist, removeFromPlaylist }) {
                 justifyContent: "space-between",
               }}
             >
-              <div>
-                {music.title} by {music.artist}
-              </div>
+              <div>{music.title}</div>
+
               <div>
                 <span>{renderStars(music.rating)}</span>
                 <IconButton
@@ -193,6 +192,7 @@ function PlayList({ playlist, removeFromPlaylist }) {
                 </IconButton>
               </div>
             </div>
+            <p className="artist"> {music.artist}</p>
           </li>
         ))}
       </ul>
