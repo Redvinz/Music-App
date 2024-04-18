@@ -1,6 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.reddit-mono {
+  font-family: "Reddit Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 20px;
+}
+
+.pacifico-regular {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background-color:rgb(16 20 24);
+  background-color: rgb(16 20 24);
   color: #fff;
   margin: 0;
   padding: 0;
@@ -13,14 +31,12 @@ body {
   border-radius: 20px;
   background-color: rgb(29, 40, 40);
   box-shadow: 1 1px 1px rgba(251, 251, 251, 0.999);
-
 }
 
 .container > div {
   flex: 1;
   padding: 20px;
   background-color: rgb(16, 20, 24);
-
 }
 
 ul {
@@ -30,13 +46,23 @@ ul {
 
 li {
   padding: 10px 0;
-  border-bottom: 1px solid #ccc;
+  font-size: 1em;
+  /* border-bottom: 1px solid #ccc; */
 }
 
 h1 {
   color: #eaeaea;
+  font-size: 3em;
+  font-weight: 700;
 }
-p{
+
+h2 {
+  color: #eaeaea;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+p {
   color: #eaeaea;
 }
 
@@ -52,31 +78,49 @@ p{
   }
 }
 
-nav{
-  align-items:center;
+nav {
+  align-items: center;
+  text-align: justify;
 }
 
-.heart{
-  align-items: end;
-  display: block ;
-  padding: 10px 20px;
-  font-size: 16px;
+.heart {
+  padding: 0px 10px;
+  font-size: 30px;
   border: none;
-  background-color: #37a40c;
+  /* background-color: #d8533c; */
   color: #fff;
   cursor: pointer;
+  border-radius: 50%;
+  margin-top: -22px;
 }
 
 .heart:hover {
-  background-color: #0056b3;
+  background-color: #fd4b2b;
+  /* padding: 2.5px 10.5px; */
+  box-shadow: rgb(56, 56, 56) 0.5px 0.5px 10px;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
 }
 
-.search{
+.search {
   border-radius: 10px;
   padding: 10px;
   margin-right: 10px;
 }
 
-.dropdown{
+.dropdown {
   padding: 10px;
+}
+
+.artist {
+  font-family: "Reddit Mono", monospace;
+  font-size: 13px;
+  display: flex; /* Use flexbox for positioning */
+  justify-content: space-between; /* Align children elements at the beginning and end */
+}
+
+select {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
 }

@@ -3,21 +3,17 @@ import "./App.css";
 import { useState } from "react";
 import tempMusicData from "./tempMusicData";
 import tempPlaylist from "./tempPlaylist";
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 import { Padding } from "@mui/icons-material";
-
-
-
-
 
 function App() {
   const [music, setMusic] = useState(tempMusicData);
   const [playlist, setPlaylist] = useState(tempPlaylist);
 
   const addToPlaylist = (song) => {
-    setPlaylist ([...playlist, song])
+    setPlaylist([...playlist, song]);
   };
   const removeFromPlaylist = (id) => {
     setPlaylist(playlist.filter((song) => song.id !== id));
@@ -25,50 +21,43 @@ function App() {
 
   return (
     <>
-      <NavBar>
-        {/* <NumberResult music={music}/> */}
-        </NavBar>
+      <NavBar>{/* <NumberResult music={music}/> */}</NavBar>
       <Main>
         <Box>
-        <Music music={music} addToPlaylist={addToPlaylist} />
+          <Music music={music} addToPlaylist={addToPlaylist} />
         </Box>
         <Box>
-        <PlayList playlist={playlist} removeFromPlaylist={removeFromPlaylist} />
+          <PlayList playlist={playlist} removeFromPlaylist={removeFromPlaylist} />
         </Box>
-        </Main> 
+      </Main>
     </>
   );
 }
-function NavBar({children}){
-  return(
+function NavBar({ children }) {
+  return (
     <nav className="container">
       <Logo />
       {children}
-      
     </nav>
   );
 }
 
-function Logo (){
-return(
-  <h1 className="app_name">Muzic App</h1>
-)
+function Logo() {
+  return <h1 className="pacifico-regular">MuziKo</h1>;
 }
 
-function NumberResult({music}){
-  return(
+function NumberResult({ music }) {
+  return (
     <p>
-        Found <strong>{music.length}</strong> results
-
+      Found <strong>{music.length}</strong> results
     </p>
   );
 }
 
-
 function Music({ music, addToPlaylist }) {
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState(""); 
-  const [selectedGenre, setSelectedGenre] = useState(""); 
+  const [sortBy, setSortBy] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("");
   const handleAddToPlaylist = (song) => {
     addToPlaylist(song);
   };
@@ -100,8 +89,8 @@ function Music({ music, addToPlaylist }) {
 
   return (
     <div>
-            <NumberResult music={filteredMusic} />
-
+      <NumberResult music={filteredMusic} />
+      <h2>Music List</h2>
       <input
         className="search"
         type="text"
@@ -109,39 +98,40 @@ function Music({ music, addToPlaylist }) {
         value={query}
         onChange={handleSearch}
       />
-       Alphabetical: <select value={sortBy} onChange={handleSort}> 
-        <option value="">All</option>
+      A-Z:{" "}
+      <select value={sortBy} onChange={handleSort}>
+        <option value="">All </option>
         <option value="title">Title</option>
         <option value="artist">Artist</option>
       </select>
-      Genre: <select value={selectedGenre} onChange={(e) => handleFilterByGenre(e.target.value)}>
+      Genre:{" "}
+      <select
+        value={selectedGenre}
+        onChange={(e) => handleFilterByGenre(e.target.value)}
+      >
         <option value="">All</option>
         <option value="Pop">Pop</option>
         <option value="Rock">Rock</option>
         <option value="Jazz">Jazz</option>
       </select>
       <ul>
-        <h2>Music List</h2>
         {filteredMusic
-          .filter((song) =>
-            song.title.toLowerCase().includes(query.toLowerCase())
-          )
+          .filter((song) => song.title.toLowerCase().includes(query.toLowerCase()))
           .map((song) => (
-            <li key={song.id}>
-              {song.title} by {song.artist} ({song.genre})
-              <button
-                onClick={() => handleAddToPlaylist(song)}
-                className="heart"
-              >
-                ♥️
-              </button>
+            <li className="reddit-mono" key={song.id}>
+              {song.title}{" "}
+              <p className="artist">
+                {song.artist} ({song.genre})
+                <button onClick={() => handleAddToPlaylist(song)} className="heart">
+                  ♥️
+                </button>
+              </p>
             </li>
           ))}
       </ul>
     </div>
   );
 }
-
 
 function Search({ query, onSearch }) {
   return (
@@ -155,9 +145,8 @@ function Search({ query, onSearch }) {
   );
 }
 
-
-function Box({children}){
-  return <div className="container">{children}</div>
+function Box({ children }) {
+  return <div className="container">{children}</div>;
 }
 
 function PlayList({ playlist, removeFromPlaylist }) {
@@ -165,23 +154,45 @@ function PlayList({ playlist, removeFromPlaylist }) {
     removeFromPlaylist(id);
   };
 
+  const renderStars = (rating) => {
+    console.log("Rating:", rating);
+    const stars = [];
+    for (let i = 0; i < rating; i++) {
+      stars.push("⭐");
+    }
+    return stars.join("");
+  };
+
   return (
     <div>
+      <div>
+        You have added <strong>{playlist.length}</strong> songs.
+      </div>
       <h2>Playlist</h2>
       <ul>
         {playlist.map((music) => (
-          <li key={music.id}>
-            {music.title} by {music.artist}
-            
-            <p>
-            <IconButton aria-label="delete" color="error" onClick={() => handleRemoveFromPlaylist(music.id)}>
-                      <DeleteIcon />
-
-              </IconButton>
-              <span>⭐</span>
-           
-              </p>
-
+          <li className="reddit-mono" key={music.id}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                {music.title} by {music.artist}
+              </div>
+              <div>
+                <span>{renderStars(music.rating)}</span>
+                <IconButton
+                  aria-label="delete"
+                  color="error"
+                  onClick={() => handleRemoveFromPlaylist(music.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
@@ -189,18 +200,8 @@ function PlayList({ playlist, removeFromPlaylist }) {
   );
 }
 
-
-
-
-function Main({children}){
- 
-    return(
-    <div className="container">{children}</div>
-);
+function Main({ children }) {
+  return <div className="container">{children}</div>;
 }
 
-
-
 export default App;
-
-
