@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import tempMusicData from "./tempMusicData";
 import tempPlaylist from "./tempPlaylist";
 import Button from "@mui/material/Button";
@@ -8,9 +8,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { Padding } from "@mui/icons-material";
 
+const CLIENT_ID = "9f784fc5b36949f996024e488dbadba1";  
+const CLIENT_SECRET = "3f41b40871b841b09f8019e79c18d00d";
+
 function App() {
-  const [music, setMusic] = useState(tempMusicData);
-  const [playlist, setPlaylist] = useState(tempPlaylist);
+  const [music, setMusic] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
 
   const addToPlaylist = (song) => {
     setPlaylist([...playlist, song]);
@@ -91,13 +94,15 @@ function Music({ music, addToPlaylist }) {
     <div>
       <NumberResult music={filteredMusic} />
       <h2>Music List</h2>
-      <input
+      {/* <input
         className="search"
         type="text"
         placeholder="Search"
         value={query}
         onChange={handleSearch}
-      />
+      /> */}
+
+<Search initialQuery={query} onSearch={handleSearch} />
       A-Z:{" "}
       <select value={sortBy} onChange={handleSort}>
         <option value="">All </option>
@@ -133,15 +138,59 @@ function Music({ music, addToPlaylist }) {
   );
 }
 
-function Search({ query, onSearch }) {
+function Search({ initialQuery, onSearch }) {
+  
+  const [query, setQuery] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    var authParameters = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body:
+      "grant_type=client_credentials&client_id=" + 
+      CLIENT_ID + 
+      "&client_secret=" + CLIENT_SECRET,
+    };
+    fetch("https://accounts.spotify.com/api/token", authParameters)
+    .then((res) => res.json())
+    .then((data) => setAccessToken(data.access_token));
+  }, []);
+
+  async function search() {
+    console.log("Searching for " + query);
+  
+    var trackParameters = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    };
+    var tracks = await fetch(
+      "https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=50", trackParameters
+    ).then((res) => res.json().then((data) => console.log(data)));
+  }
+  
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
   return (
     <input
-      className="search"
-      type="text"
-      placeholder="Search"
-      value={query}
-      onChange={(e) => onSearch(e.target.value)}
-    />
+        className="search"
+        type="text"
+        placeholder="Search"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            search(); // Call the search function when Enter key is pressed
+          }
+        }}
+        value={query}
+        onChange={handleSearch}
+      />
   );
 }
 
@@ -205,3 +254,27 @@ function Main({ children }) {
 }
 
 export default App;
+
+
+// import React from 'react'
+
+// export default function App() {
+// // fetch("https://jsonplaceholder.typicode.com/todos").then((result)=>result.json().then((data) => console.log(data)));
+  
+
+// async function getTodos () {
+//   const result = await fetch ("https://jsonplaceholder.typicode.com/todos");
+//   const data = await result.json();
+//   console.log(data);
+// }
+// getTodos();
+// console.log("Hello");
+
+//   return (
+//     <div>App</div>
+//   )
+// }
+
+
+
+
