@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { Padding } from "@mui/icons-material";
 
-const CLIENT_ID = "9f784fc5b36949f996024e488dbadba1";  
+const CLIENT_ID = "9f784fc5b36949f996024e488dbadba1";
 const CLIENT_SECRET = "3f41b40871b841b09f8019e79c18d00d";
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
       <NavBar>{/* <NumberResult music={music}/> */}</NavBar>
       <Main>
         <Box>
-          <Music music={music} addToPlaylist={addToPlaylist} />
+          <Music music={music} setMusic={setMusic} addToPlaylist={addToPlaylist} />
         </Box>
         <Box>
           <PlayList playlist={playlist} removeFromPlaylist={removeFromPlaylist} />
@@ -57,7 +57,7 @@ function NumberResult({ music }) {
   );
 }
 
-function Music({ music, addToPlaylist }) {
+function Music({ music, addToPlaylist, setMusic }) {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
@@ -101,8 +101,7 @@ function Music({ music, addToPlaylist }) {
         value={query}
         onChange={handleSearch}
       /> */}
-
-<Search initialQuery={query} onSearch={handleSearch} />
+      <Search initialQuery={query} onSearch={handleSearch} setMusic={setMusic} />
       A-Z:{" "}
       <select value={sortBy} onChange={handleSort}>
         <option value="">All </option>
@@ -121,12 +120,21 @@ function Music({ music, addToPlaylist }) {
       </select>
       <ul>
         {filteredMusic
-          .filter((song) => song.title.toLowerCase().includes(query.toLowerCase()))
+          .filter(
+            (song) =>
+              song &&
+              song.name &&
+              song.name.toLowerCase().includes(query.toLowerCase())
+          ) // Filter based on track name
           .map((song) => (
             <li className="reddit-mono" key={song.id}>
-              {song.title}{" "}
+              <div>
+                <strong>{song.name}</strong> by {song.album.name} (
+                {song.album.release_date.substring(0, 4)})
+              </div>
               <p className="artist">
-                {song.artist} ({song.genre})
+                {song.artists.map((artist) => artist.name).join(", ")}
+
                 <button onClick={() => handleAddToPlaylist(song)} className="heart">
                   ♥️
                 </button>
@@ -138,8 +146,7 @@ function Music({ music, addToPlaylist }) {
   );
 }
 
-function Search({ initialQuery, onSearch }) {
-  
+function Search({ initialQuery, onSearch, setMusic }) {
   const [query, setQuery] = useState("");
   const [accessToken, setAccessToken] = useState("");
 
@@ -150,18 +157,19 @@ function Search({ initialQuery, onSearch }) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body:
-      "grant_type=client_credentials&client_id=" + 
-      CLIENT_ID + 
-      "&client_secret=" + CLIENT_SECRET,
+        "grant_type=client_credentials&client_id=" +
+        CLIENT_ID +
+        "&client_secret=" +
+        CLIENT_SECRET,
     };
     fetch("https://accounts.spotify.com/api/token", authParameters)
-    .then((res) => res.json())
-    .then((data) => setAccessToken(data.access_token));
+      .then((res) => res.json())
+      .then((data) => setAccessToken(data.access_token));
   }, []);
 
   async function search() {
     console.log("Searching for " + query);
-  
+
     var trackParameters = {
       method: "GET",
       headers: {
@@ -169,28 +177,24 @@ function Search({ initialQuery, onSearch }) {
         Authorization: "Bearer " + accessToken,
       },
     };
-    var tracks = await fetch(
-      "https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=50", trackParameters
-    ).then((res) => res.json().then((data) => console.log(data)));
   }
-  
 
   const handleSearch = (e) => {
     setQuery(e.target.value);
   };
   return (
     <input
-        className="search"
-        type="text"
-        placeholder="Search"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            search(); // Call the search function when Enter key is pressed
-          }
-        }}
-        value={query}
-        onChange={handleSearch}
-      />
+      className="search"
+      type="text"
+      placeholder="Search"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          search();
+        }
+      }}
+      value={query}
+      onChange={handleSearch}
+    />
   );
 }
 
@@ -203,14 +207,14 @@ function PlayList({ playlist, removeFromPlaylist }) {
     removeFromPlaylist(id);
   };
 
-  const renderStars = (rating) => {
-    console.log("Rating:", rating);
-    const stars = [];
-    for (let i = 0; i < rating; i++) {
-      stars.push("⭐");
-    }
-    return stars.join("");
-  };
+  // const renderStars = (rating) => {
+  //   console.log("Rating:", rating);
+  //   const stars = [];
+  //   for (let i = 0; i < rating; i++) {
+  //     stars.push("⭐");
+  //   }
+  //   return stars.join("");
+  // };
 
   return (
     <div>
@@ -231,7 +235,7 @@ function PlayList({ playlist, removeFromPlaylist }) {
               <div>{music.title}</div>
 
               <div>
-                <span>{renderStars(music.rating)}</span>
+                {/* <span>{renderStars(music.rating)}</span> */}
                 <IconButton
                   aria-label="delete"
                   color="error"
@@ -255,12 +259,10 @@ function Main({ children }) {
 
 export default App;
 
-
 // import React from 'react'
 
 // export default function App() {
 // // fetch("https://jsonplaceholder.typicode.com/todos").then((result)=>result.json().then((data) => console.log(data)));
-  
 
 // async function getTodos () {
 //   const result = await fetch ("https://jsonplaceholder.typicode.com/todos");
@@ -274,7 +276,3 @@ export default App;
 //     <div>App</div>
 //   )
 // }
-
-
-
-

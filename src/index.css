@@ -27,8 +27,8 @@ body {
 .container {
   display: flex;
   justify-content: space-around;
-  margin: 10px;
-  border-radius: 20px;
+  margin: 5px;
+  border-radius: 5px;
   background-color: rgb(29, 40, 40);
   box-shadow: 1 1px 1px rgba(251, 251, 251, 0.999);
 }
