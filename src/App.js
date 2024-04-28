@@ -177,6 +177,34 @@ function Search({ initialQuery, onSearch, setMusic }) {
         Authorization: "Bearer " + accessToken,
       },
     };
+
+    try {
+      const response = await fetch(
+        "https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=50",
+        trackParameters
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Data from Spotify API:", data);
+
+      // Ensure that data.tracks.items exists and is an array before setting the music state
+      if (
+        data &&
+        data.tracks &&
+        data.tracks.items &&
+        Array.isArray(data.tracks.items)
+      ) {
+        setMusic(data.tracks.items); // Set music state as an array of music objects
+      } else {
+        console.error("Invalid data format received from Spotify API");
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
   }
 
   const handleSearch = (e) => {
